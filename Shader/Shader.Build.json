@@ -1,0 +1,6 @@
+{
+  "name": "Shader",
+  "pch": "ShaderPCH.h",
+  "type": "lib",
+  "dependency": [ "Core" ]
+}

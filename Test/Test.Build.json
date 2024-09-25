@@ -1,0 +1,16 @@
+{
+  "name": "Test",
+  "type": "exe",
+  "dependency": [ "Core", "CoreObject", "Shader", "DX12RDI" ],
+  "private_include_paths": [ "../ThirdParty/googletest/googletest/include" ],
+  "thirdparty_library": [
+    {
+      "build": "release",
+      "path": [ "../ThirdParty/googletest/googletest/lib/x64/gtest.lib", "../ThirdParty/googletest/googletest/lib/x64/gtest_main.lib" ]
+    },
+    {
+      "build": "debug",
+      "path": [ "../ThirdParty/googletest/googletest/lib/x64/gtestd.lib", "../ThirdParty/googletest/googletest/lib/x64/gtest_maind.lib" ]
+    }
+  ]
+}

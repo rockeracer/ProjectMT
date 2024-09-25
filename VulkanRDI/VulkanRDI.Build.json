@@ -1,0 +1,21 @@
+{
+  "name": "VulkanRDI",
+  "pch": "VulkanRDI_PCH.h",
+  "type": "lib",
+  "dependency": [ "Core", "RDI", "Shader" ],
+  "private_include_paths": [ "../ThirdParty/Vulkan/Include" ],
+  "thirdparty_library": [
+    {
+      "build": "all",
+      "path": [ "../ThirdParty/Vulkan/Lib/vulkan-1.lib" ]
+    },
+    {
+      "build": "release",
+      "path": [ "../ThirdParty/Vulkan/Lib/shaderc_combined.lib" ]
+    },
+    {
+      "build": "debug",
+      "path": [ "../ThirdParty/Vulkan/Lib/shaderc_combinedd.lib" ]
+    }
+  ]
+}

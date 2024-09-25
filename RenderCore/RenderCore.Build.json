@@ -1,0 +1,6 @@
+{
+  "name": "RenderCore",
+  "pch": "RenderCorePCH.h",
+  "type": "lib",
+  "dependency": [ "Core", "RDI", "Shader" ]
+}
