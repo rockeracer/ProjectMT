@@ -1,0 +1,6 @@
+{
+  "name": "CoreObject",
+  "pch": "CoreObjectPCH.h",
+  "type": "lib",
+  "dependency": [ "Core" ]
+}

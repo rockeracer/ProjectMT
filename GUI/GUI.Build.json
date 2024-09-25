@@ -1,0 +1,14 @@
+{
+  "name": "GUI",
+  "pch": "GUI_PCH.h",
+  "type": "lib",
+  "private_include_paths": [ "../ThirdParty/SDL2/include" ],
+  "dependency": [ "Core", "RenderCore", "imgui" ],
+  "thirdparty_library": [
+    {
+      "build": "all",
+      "path": [ "../ThirdParty/SDL2/lib/x64/SDL2.lib" ]
+    }
+  ],
+  "delay_load_dlls": [ "SDL2.dll" ]
+}

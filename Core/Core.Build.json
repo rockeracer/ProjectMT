@@ -1,0 +1,6 @@
+{
+  "name": "Core",
+  "pch": "CorePCH.h",
+  "type": "lib",
+  "public_include_paths": ["../ThirdParty/mathfu/include"]
+}

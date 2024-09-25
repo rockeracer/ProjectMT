@@ -1,0 +1,107 @@
+#include "Common.shd"
+
+float4 TransformVector4(float4 v, float4x4 m)
+{
+#if METAL || VULKAN
+	return v * m;
+#elif DX12
+	return mul(v, m);
+#endif
+}
+
+float3 TransformVector3(float3 v, float4x4 m)
+{
+#if METAL || VULKAN
+	return (float4(v, 0) * m).xyz;
+#elif DX12
+	return mul(float4(v, 0), m);
+#endif
+}
+
+
+#if METAL
+#include <metal_stdlib>
+using namespace metal;
+#endif
+
+#if DX12 || METAL
+struct Constants
+{
+    float4x4 modelViewProjectionMatrix;
+    float4x4 normalMatrix;
+};
+#elif VULKAN
+layout(binding = 0) uniform UniformBufferObject
+{
+    float4x4 modelViewProjectionMatrix;
+    float4x4 normalMatrix;
+} uniforms;
+#endif
+
+#if DX12
+cbuffer ConstantBuffer : register(b0)
+{
+    Constants uniforms;
+};
+#endif
+
+#if METAL
+struct MaterialTexture
+{
+#endif
+%TextureDeclaration
+#if METAL
+};
+#endif
+
+#if DX12
+VertexOut vertex_transform(VertexIn Vertex)
+#elif VULKAN
+layout(location = 0) in float3 VertexIn_position;
+layout(location = 1) in float3 VertexIn_normal;
+layout(location = 2) in float3 VertexIn_tangent;
+layout(location = 3) in float2 VertexIn_texCoords;
+
+layout(location = 0) out VertexOut result;
+
+void main()
+#elif METAL
+vertex VertexOut vertex_transform(device VertexIn *vertices [[buffer(0)]],
+                                  constant Constants &uniforms [[buffer(1)]],
+                                  uint vertexId [[vertex_id]])
+#endif
+{
+#if DX12
+#elif VULKAN
+	VertexIn Vertex;
+	Vertex.position = VertexIn_position;
+	Vertex.normal = VertexIn_normal;
+	Vertex.tangent = VertexIn_tangent;
+	Vertex.texCoords = VertexIn_texCoords; 
+#elif METAL
+	VertexIn Vertex = vertices[vertexId];
+#endif
+
+    float3 modelPosition = Vertex.position;
+    float3 modelNormal = Vertex.normal;
+    float3 modelTangent = Vertex.tangent;
+	float4 ResultPosition = TransformVector4(float4(modelPosition, 1), uniforms.modelViewProjectionMatrix);
+
+#if (DX12 || METAL)
+    VertexOut result;
+	result.position = ResultPosition;
+#elif VULKAN
+	gl_Position = ResultPosition;
+	gl_Position.y = -gl_Position.y;
+#endif
+
+	// Copy the vertex normal and texture coordinates
+    result.normal = normalize(TransformVector3(modelNormal, uniforms.normalMatrix));
+    result.tangent = normalize(TransformVector3(modelTangent, uniforms.normalMatrix));
+    result.texCoords = Vertex.texCoords;
+    result.NdotT = dot(result.normal, result.tangent);
+
+#if (DX12 || METAL)
+    return result;
+#endif
+}

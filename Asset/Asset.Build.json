@@ -1,0 +1,7 @@
+{
+  "name": "Asset",
+  "pch": "AssetPCH.h",
+  "type": "lib",
+  "dependency": [ "Core", "RenderCore" ],
+  "private_include_paths": [ "../ThirdParty/stb" ]
+}

@@ -1,0 +1,1 @@
+#include "ClassRegister.h"

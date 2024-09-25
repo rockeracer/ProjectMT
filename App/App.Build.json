@@ -1,0 +1,5 @@
+{
+  "name": "App",
+  "type": "exe",
+  "dependency": [ "Core", "GUI" ]
+}

@@ -1,0 +1,124 @@
+#include "common.shd"
+
+#if METAL
+#include <metal_stdlib>
+using namespace metal;
+#endif
+
+#if DX12
+static float3 ambientLightIntensity = {0.1, 0.1, 0.1};
+static float3 diffuseLightIntensity = {0.9, 0.9, 0.9};
+static float3 lightDirection = {-0.577, -0.577, -0.577};
+#elif VULKAN
+float3 ambientLightIntensity = {0.1, 0.1, 0.1};
+float3 diffuseLightIntensity = {0.9, 0.9, 0.9};
+float3 lightDirection = {-0.577, -0.577, -0.577};
+#elif METAL
+constant half3 ambientLightIntensity(0.1, 0.1, 0.1);
+constant half3 diffuseLightIntensity(0.9, 0.9, 0.9);
+constant half3 lightDirection(-0.577, -0.577, -0.577);
+#endif
+
+struct PixelShaderParam
+{
+    float2 Texcoord[1];
+
+    float3 BaseColor;
+    float Metallic;
+    float Specular;
+    float Roughness;
+    float3 EmissiveColor;
+    float Opacity;
+    float OpacityMask;
+    float3 Normal;
+    float3 WorldPositionOffset;
+};
+
+float3 GetPixelShaderParamNormal(float3 MaterialNormal, VertexOut PixelShaderInput)
+{
+    MaterialNormal = MaterialNormal * 2.0f - 1.0f;
+    float3 Binormal = cross(PixelShaderInput.tangent, PixelShaderInput.normal);
+    Binormal = normalize(Binormal);
+    float3 WorldNormal = normalize(PixelShaderInput.normal) * MaterialNormal.z + normalize(PixelShaderInput.tangent) * MaterialNormal.x - Binormal * MaterialNormal.y;
+    return WorldNormal;
+}
+
+#if METAL
+struct MaterialTexture
+{
+#endif
+%TextureDeclaration
+#if METAL
+};
+#endif
+
+PixelShaderParam GetPixelShaderParam(VertexOut PixelShaderInput
+#if METAL
+, MaterialTexture Textures
+#endif
+)
+{
+    PixelShaderParam Param;
+    Param.Texcoord[0] = PixelShaderInput.texCoords;
+	Param.BaseColor = float3(0.0f, 0.0f, 0.0f);
+    Param.Metallic = 0;
+    Param.Specular = 0;
+    Param.Roughness = 0;
+    Param.EmissiveColor = float3(0.0f, 0.0f, 0.0f);
+    Param.Opacity = 1.0f;
+    Param.OpacityMask = 0.5f;
+    Param.Normal = PixelShaderInput.normal;
+    Param.WorldPositionOffset = float3(0.0f, 0.0f, 0.0f);
+
+    %MaterialPixelShaderCode
+
+    return Param;
+}
+
+#if DX12
+float4 fragment_lit_textured(VertexOut fragmentIn) : SV_TARGET
+#elif VULKAN
+layout(location = 0) in VertexOut fragmentIn;
+
+layout(location = 0) out float4 outColor;
+
+void main()
+#elif METAL
+fragment half4 fragment_lit_textured(VertexOut fragmentIn [[stage_in]], MaterialTexture Textures)
+#endif
+{
+    PixelShaderParam Param =
+#if DX12 || VULKAN
+	GetPixelShaderParam(fragmentIn);
+#elif METAL
+	GetPixelShaderParam(fragmentIn, Textures);
+#endif
+
+//    float3 BumpNormal = Textures.NormalTexture.sample(Textures.sampler2d, fragmentIn.texCoords).rgb * 2.0 - 1.0;
+//    float3 Binormal = cross(fragmentIn.tangent, fragmentIn.normal);
+//    Binormal = normalize(Binormal);
+//    float3 WorldNormal = normalize(fragmentIn.normal) * BumpNormal.z + normalize(fragmentIn.tangent) * BumpNormal.x - Binormal * BumpNormal.y;
+    float3 WorldNormal = Param.Normal;
+    
+    // Sample the texture to get the surface color at this point
+    half3 surfaceColor = half3(Param.BaseColor);//half3(Textures.DiffuseTexture.sample(Textures.sampler2d, fragmentIn.texCoords).rgb);
+    // Re-normalize the interpolated surface normal
+    half3 normal = normalize(half3(fragmentIn.normal));
+    // Compute the ambient color contribution
+    half3 color = ambientLightIntensity * surfaceColor;
+    // Calculate the diffuse factor as the dot product of the normal and light direction
+    float diffuseFactor = clamp(dot(normal, -lightDirection), 0.0f, 1.0f);
+    // Add in the diffuse contribution from the light
+    color += diffuseFactor * diffuseLightIntensity * surfaceColor;
+
+    color += half3(Param.EmissiveColor);
+    
+    float diffuseFactorWithBumpTexture = clamp(dot(half3(WorldNormal), -lightDirection), 0.0f, 1.0f);
+    //return diffuseFactorWithBumpTexture;
+
+#if DX12 || METAL
+    return half4(color, 1);
+#elif VULKAN
+	outColor = float4(color * diffuseFactorWithBumpTexture, 1);
+#endif
+}

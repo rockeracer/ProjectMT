@@ -1,0 +1,27 @@
+{
+  "name": "DX12RDI",
+  "pch": "DX12RDI_PCH.h",
+  "type": "lib",
+  "dependency": [ "Core", "RDI", "DirectXTK12", "GUI" ],
+  "private_include_modules": [ "Shader" ],
+  "private_include_paths": [ "../ThirdParty/DirectX/Include", "../ThirdParty/DirectXTK12/Inc" ],
+  "thirdparty_library": [
+    {
+      "build": "all",
+      "path": [ "../ThirdParty/DirectX/Lib/x64/d3d12.lib" ]
+    },
+    {
+      "build": "all",
+      "path": [ "../ThirdParty/DirectX/Lib/x64/dxgi.lib" ]
+    },
+    {
+      "build": "all",
+      "path": [ "../ThirdParty/DirectX/Lib/x64/d3dcompiler.lib" ]
+    },
+    {
+      "build": "all",
+      "path": [ "runtimeobject.lib" ],
+      "absolute": "true"
+    }
+  ]
+}

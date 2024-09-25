@@ -1,0 +1,61 @@
+#if VULKAN
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+#define half2 vec2
+#define half3 vec3
+#define half4 vec4
+#define float4x4 mat4
+#endif
+
+#if METAL
+struct VertexIn
+{
+    packed_float3 position;
+    packed_float3 normal;
+    packed_float3 tangent;
+    packed_float2 texCoords;
+};
+
+struct VertexOut
+{
+    float4 position [[position]];
+    float3 normal;
+    float3 tangent;
+    float2 texCoords;
+    float NdotT;
+};
+#elif DX12
+struct VertexIn
+{
+    float3 position : POSITION;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float2 texCoords : TEXCOORD0;
+};
+
+struct VertexOut
+{
+    float4 position : SV_POSITION;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float2 texCoords : TEXCOORD0;
+    float NdotT : TEXCOORD1;
+};
+#elif VULKAN
+struct VertexIn
+{
+    float3 position;
+    float3 normal;
+    float3 tangent;
+    float2 texCoords;
+};
+
+struct VertexOut
+{
+    float3 normal;
+    float3 tangent;
+    float2 texCoords;
+    float NdotT;
+};
+#endif

@@ -1,0 +1,6 @@
+{
+  "name": "Engine",
+  "pch": "EnginePCH.h",
+  "type": "lib",
+  "dependency": [ "Core", "CoreObject" ]
+}
