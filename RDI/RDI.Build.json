@@ -1,0 +1,6 @@
+{
+  "name": "RDI",
+  "pch": "RDI_PCH.h",
+  "type": "lib",
+  "dependency": [ "Core" ]
+}
