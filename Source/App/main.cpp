@@ -16,15 +16,15 @@ int main(int argc, const char * argv[])
 
     MTWindow* window = GUI->CreateWindow();
     
-    bool done = false;
+    bool bDone = false;
     MTClock Clock;
-    while (!done)
+    while (!bDone)
     {
         Clock.Update();
         
-        done = GUI->ProcessEvent();
+        bDone = GUI->ProcessEvent();
         
-        if (done)
+        if (bDone)
         {
             GUI->ExitRender();
         }

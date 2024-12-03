@@ -1,7 +1,8 @@
 #include "gtest/gtest.h"
 #include "Core.h"
 
-class FooTest : public ::testing::Test {
+class FooTest : public ::testing::Test
+{
 };
 
 int main(int argc, char * argv[])

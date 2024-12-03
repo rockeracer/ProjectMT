@@ -8,17 +8,17 @@ MTRenderSample g_RenderSample;
 MTRenderCoreModule::MTRenderCoreModule()
 {
 	m_RDI = RDI::GetRDI();
-    
+
 	m_CommandBuffer.Resize(MTRenderVar::RENDER_FRAME_COUNT);
 	for (MTInt32 i = 0; i < MTRenderVar::RENDER_FRAME_COUNT; ++i)
 	{
 		m_CommandBuffer[i] = new MTRenderCommandBuffer;
 	}
-    
-    m_RenderThread = new MTRenderThread(this, MTRenderVar::RENDER_FRAME_COUNT);
-    
-    
-    g_RenderSample.Init(m_RDI);
+
+	m_RenderThread = new MTRenderThread(this, MTRenderVar::RENDER_FRAME_COUNT);
+
+
+	g_RenderSample.Init(m_RDI);
 }
 
 MTRenderCoreModule::~MTRenderCoreModule()
@@ -28,7 +28,7 @@ MTRenderCoreModule::~MTRenderCoreModule()
 
 void MTRenderCoreModule::Init()
 {
-    
+
 }
 
 void MTRenderCoreModule::Destroy()
@@ -37,59 +37,59 @@ void MTRenderCoreModule::Destroy()
 
 MTRDIWindowView* MTRenderCoreModule::CreateWindowView(void* Handle, MTUInt32 Width, MTUInt32 Height)
 {
-    if (m_RDI)
-    {
-        return m_RDI->CreateWindowView(Handle, Width, Height, MTRenderVar::BACK_BUFFER_COUNT);
-    }
+	if (m_RDI)
+	{
+		return m_RDI->CreateWindowView(Handle, Width, Height, MTRenderVar::BACK_BUFFER_COUNT);
+	}
 
-    return nullptr;
+	return nullptr;
 }
 
 void* MTRenderCoreModule::InitGUIRender(const MTGUIFontTextureDesc& FontTextureDesc, const MTGUIVertexDesc& VertexDesc)
 {
-    if (m_RDI)
-    {
-        return m_RDI->InitGUIRender(FontTextureDesc, VertexDesc, MTRenderVar::RENDER_FRAME_COUNT);
-    }
-    
-    return nullptr;
+	if (m_RDI)
+	{
+		return m_RDI->InitGUIRender(FontTextureDesc, VertexDesc, MTRenderVar::RENDER_FRAME_COUNT);
+	}
+
+	return nullptr;
 }
 
 void MTRenderCoreModule::ShutdownGUIRender()
 {
-    if (m_RDI)
-    {
-        return m_RDI->ShutdownGUIRender();
-    }
+	if (m_RDI)
+	{
+		return m_RDI->ShutdownGUIRender();
+	}
 }
 
 void MTRenderCoreModule::BeginRender(const MTRenderCommandBuffer* CommandBuffer)
 {
-    if (m_RDI)
-    {
-        return m_RDI->BeginRender();
-    }
+	if (m_RDI)
+	{
+		return m_RDI->BeginRender();
+	}
 }
 
 void MTRenderCoreModule::RenderGUI(MTRDIWindowView* View, ImDrawData* DrawData)
 {
-    if (m_RDI)
-    {
-        return m_RDI->RenderGUI(View, DrawData);
-    }
+	if (m_RDI)
+	{
+		return m_RDI->RenderGUI(View, DrawData);
+	}
 }
 
 void MTRenderCoreModule::EndRender(MTRDIWindowView* View)
 {
-    if (m_RDI)
-    {
-        return m_RDI->EndRender(View);
-    }
+	if (m_RDI)
+	{
+		return m_RDI->EndRender(View);
+	}
 }
 
 void MTRenderCoreModule::RenderNewFrame(MTInt32 RenderFrame)
 {
-    const MTRenderCommandBuffer* CommandBuffer = m_CommandBuffer[RenderFrame % MTRenderVar::RENDER_FRAME_COUNT];
+	const MTRenderCommandBuffer* CommandBuffer = m_CommandBuffer[RenderFrame % MTRenderVar::RENDER_FRAME_COUNT];
 
 	if (CommandBuffer)
 	{
@@ -122,11 +122,11 @@ void MTRenderCoreModule::Render(MTInt32 Frame, MTRDIWindowView* View)
 
 void MTRenderCoreModule::ExitRender()
 {
-    if (m_RenderThread)
-    {
-        delete m_RenderThread;
-        m_RenderThread = nullptr;
-    }
+	if (m_RenderThread)
+	{
+		delete m_RenderThread;
+		m_RenderThread = nullptr;
+	}
 
 	g_RenderSample.Destroy();
 
@@ -150,8 +150,8 @@ void MTRenderCoreModule::Wait()
 
 void MTRenderCoreModule::WaitForRenderCompleted()
 {
-    if (m_RDI)
-    {
-        return m_RDI->WaitForRenderCompleted();
-    }
+	if (m_RDI)
+	{
+		return m_RDI->WaitForRenderCompleted();
+	}
 }

@@ -6,6 +6,6 @@ public:
 	IModule() {}
 	virtual ~IModule() {}
 
-	virtual void Init()	{}
+	virtual void Init() {}
 	virtual void Destroy() {}
 };

@@ -5,8 +5,8 @@ class IModule;
 class IModuleManager
 {
 public:
-    IModuleManager()			{}
-    virtual ~IModuleManager()	{}
+    IModuleManager() {}
+    virtual ~IModuleManager() {}
     
     virtual void Init() = 0;
     virtual void Destroy() = 0;

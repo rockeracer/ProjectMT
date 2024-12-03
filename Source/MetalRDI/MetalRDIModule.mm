@@ -31,16 +31,16 @@ void MTMetalRDIModule::Destroy()
 MTRDIWindowView* MTMetalRDIModule::CreateWindowView(void* Handle, const MTGUIWindowSize& Size, MTInt32 BackbufferCount)
 {
     NSWindow* Window = (__bridge NSWindow*)(Handle);
-    
+
     MTMetalWindowView* WindowView = new MTMetalWindowView;
     WindowView->MetalLayer = [CAMetalLayer layer];
     [WindowView->MetalLayer setDevice:m_MetalDevice];
-	WindowView->MetalLayer.maximumDrawableCount = BackbufferCount;
+    WindowView->MetalLayer.maximumDrawableCount = BackbufferCount;
     ResizeView(WindowView, Size);
 
     [[Window contentView] setLayer:WindowView->MetalLayer];
     [[Window contentView] setWantsLayer:YES];
-    
+
     return WindowView;
 }
 
@@ -53,8 +53,8 @@ void MTMetalRDIModule::ResizeView(MTRDIWindowView* View, const MTGUIWindowSize& 
     MTMetalWindowView* MetalView = dynamic_cast<MTMetalWindowView*>(View);
     if (MetalView)
     {
-		MetalView->Width = Size.Width;
-		MetalView->Height = Size.Height;
+        MetalView->Width = Size.Width;
+        MetalView->Height = Size.Height;
 
         CGRect bounds = CGRectMake(0, 0, Size.Width, Size.Height);
         CGRect nativeBounds = CGRectMake(0, 0, Size.DisplayWidth, Size.DisplayHeight);
@@ -79,7 +79,7 @@ void MTMetalRDIModule::ShutdownGUIRender()
     if (m_MetalGUI)
     {
         m_MetalGUI->Destroy();
-        
+
         delete m_MetalGUI;
         m_MetalGUI = nullptr;
     }
@@ -87,7 +87,7 @@ void MTMetalRDIModule::ShutdownGUIRender()
 
 void MTMetalRDIModule::BeginRender(const MTRDICommandBuffer* CommandBuffer)
 {
-	MTMetalWindowView* MetalView = dynamic_cast<MTMetalWindowView*>(CommandBuffer->View);
+    MTMetalWindowView* MetalView = dynamic_cast<MTMetalWindowView*>(CommandBuffer->View);
     if (MetalView)
     {
         MetalView->BeginFrame();

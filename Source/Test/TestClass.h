@@ -9,14 +9,14 @@ public:
 	GENERATED_BODY(TestClass)
 
 	MTPROPERTY()
-    MTInt32 Int32;
+	MTInt32 Int32;
 
 	MTPROPERTY()
-    MTInt64 Int64;
-	
-	MTPROPERTY()
-    float Float;
+	MTInt64 Int64;
 
 	MTPROPERTY()
-    MTString String;
+	float Float;
+
+	MTPROPERTY()
+	MTString String;
 };

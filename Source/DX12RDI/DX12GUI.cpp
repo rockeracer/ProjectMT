@@ -63,7 +63,9 @@ void* MTDX12GUI::Init(const ComPtr<ID3D12Device>& DX12Device, const ComPtr<ID3D1
 
 		ID3DBlob* blob = NULL;
 		if (D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, &blob, NULL) != S_OK)
+		{
 			return false;
+		}
 
 		m_DX12Device->CreateRootSignature(0, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&m_RootSignature));
 		blob->Release();
@@ -90,35 +92,37 @@ void* MTDX12GUI::Init(const ComPtr<ID3D12Device>& DX12Device, const ComPtr<ID3D1
 	{
 		static const char* vertexShader =
 			"cbuffer vertexBuffer : register(b0) \
-            {\
-              float4x4 ProjectionMatrix; \
-            };\
-            struct VS_INPUT\
-            {\
-              float2 pos : POSITION;\
-              float4 col : COLOR0;\
-              float2 uv  : TEXCOORD0;\
-            };\
-            \
-            struct PS_INPUT\
-            {\
-              float4 pos : SV_POSITION;\
-              float4 col : COLOR0;\
-              float2 uv  : TEXCOORD0;\
-            };\
-            \
-            PS_INPUT main(VS_INPUT input)\
-            {\
-              PS_INPUT output;\
-              output.pos = mul( ProjectionMatrix, float4(input.pos.xy, 0.f, 1.f));\
-              output.col = input.col;\
-              output.uv  = input.uv;\
-              return output;\
-            }";
+			{\
+				float4x4 ProjectionMatrix; \
+			};\
+			struct VS_INPUT\
+			{\
+				float2 pos : POSITION;\
+				float4 col : COLOR0;\
+				float2 uv  : TEXCOORD0;\
+			};\
+			\
+			struct PS_INPUT\
+			{\
+				float4 pos : SV_POSITION;\
+				float4 col : COLOR0;\
+				float2 uv  : TEXCOORD0;\
+			};\
+			\
+			PS_INPUT main(VS_INPUT input)\
+			{\
+				PS_INPUT output;\
+				output.pos = mul( ProjectionMatrix, float4(input.pos.xy, 0.f, 1.f));\
+				output.col = input.col;\
+				output.uv  = input.uv;\
+				return output;\
+			}";
 
 		D3DCompile(vertexShader, strlen(vertexShader), NULL, NULL, NULL, "main", "vs_5_0", 0, 0, &m_VertexShaderBlob, NULL);
 		if (m_VertexShaderBlob.Get() == nullptr) // NB: Pass ID3D10Blob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
+		{
 			return false;
+		}
 		psoDesc.VS = { m_VertexShaderBlob->GetBufferPointer(), m_VertexShaderBlob->GetBufferSize() };
 
 		// Create the input layout
@@ -135,23 +139,25 @@ void* MTDX12GUI::Init(const ComPtr<ID3D12Device>& DX12Device, const ComPtr<ID3D1
 	{
 		static const char* pixelShader =
 			"struct PS_INPUT\
-            {\
-              float4 pos : SV_POSITION;\
-              float4 col : COLOR0;\
-              float2 uv  : TEXCOORD0;\
-            };\
-            SamplerState sampler0 : register(s0);\
-            Texture2D texture0 : register(t0);\
-            \
-            float4 main(PS_INPUT input) : SV_Target\
-            {\
-              float4 out_col = input.col * texture0.Sample(sampler0, input.uv); \
-              return out_col; \
-            }";
+			{\
+				float4 pos : SV_POSITION;\
+				float4 col : COLOR0;\
+				float2 uv  : TEXCOORD0;\
+			};\
+			SamplerState sampler0 : register(s0);\
+			Texture2D texture0 : register(t0);\
+			\
+			float4 main(PS_INPUT input) : SV_Target\
+			{\
+				float4 out_col = input.col * texture0.Sample(sampler0, input.uv); \
+				return out_col; \
+			}";
 
 		D3DCompile(pixelShader, strlen(pixelShader), NULL, NULL, NULL, "main", "ps_5_0", 0, 0, &m_PixelShaderBlob, NULL);
 		if (m_PixelShaderBlob.Get() == nullptr)  // NB: Pass ID3D10Blob* pErrorBlob to D3DCompile() to get error showing in (const char*)pErrorBlob->GetBufferPointer(). Make sure to Release() the blob!
+		{
 			return false;
+		}
 		psoDesc.PS = { m_PixelShaderBlob->GetBufferPointer(), m_PixelShaderBlob->GetBufferSize() };
 	}
 
@@ -198,7 +204,9 @@ void* MTDX12GUI::Init(const ComPtr<ID3D12Device>& DX12Device, const ComPtr<ID3D1
 	}
 
 	if (m_DX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_PipelineState)) != S_OK)
+	{
 		return false;
+	}
 
 	m_FrameResources = new FrameResources[m_numFramesInFlight];
 
@@ -246,13 +254,20 @@ void MTDX12GUI::RenderGUI(MTRDIWindowView* View, ImDrawData* DrawData)
 		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 		if (m_DX12Device->CreateCommittedResource(&props, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, IID_PPV_ARGS(&g_pVB)) < 0)
+		{
 			return;
+		}
 		frameResources->VB = g_pVB;
 		frameResources->VertexBufferSize = g_VertexBufferSize;
 	}
+
 	if (!g_pIB || g_IndexBufferSize < DrawData->TotalIdxCount)
 	{
-		if (g_pIB) { g_pIB->Release(); g_pIB = NULL; }
+		if (g_pIB)
+		{
+			g_pIB->Release();
+			g_pIB = NULL;
+		}
 		g_IndexBufferSize = DrawData->TotalIdxCount + 10000;
 		D3D12_HEAP_PROPERTIES props;
 		memset(&props, 0, sizeof(D3D12_HEAP_PROPERTIES));
@@ -271,7 +286,9 @@ void MTDX12GUI::RenderGUI(MTRDIWindowView* View, ImDrawData* DrawData)
 		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 		if (m_DX12Device->CreateCommittedResource(&props, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_GENERIC_READ, NULL, IID_PPV_ARGS(&g_pIB)) < 0)
+		{
 			return;
+		}
 		frameResources->IB = g_pIB;
 		frameResources->IndexBufferSize = g_IndexBufferSize;
 	}
@@ -281,9 +298,13 @@ void MTDX12GUI::RenderGUI(MTRDIWindowView* View, ImDrawData* DrawData)
 	D3D12_RANGE range;
 	memset(&range, 0, sizeof(D3D12_RANGE));
 	if (g_pVB->Map(0, &range, &vtx_resource) != S_OK)
+	{
 		return;
+	}
 	if (g_pIB->Map(0, &range, &idx_resource) != S_OK)
+	{
 		return;
+	}
 	ImDrawVert* vtx_dst = (ImDrawVert*)vtx_resource;
 	ImDrawIdx* idx_dst = (ImDrawIdx*)idx_resource;
 	for (int n = 0; n < DrawData->CmdListsCount; n++)
@@ -309,9 +330,9 @@ void MTDX12GUI::RenderGUI(MTRDIWindowView* View, ImDrawData* DrawData)
 		float mvp[4][4] =
 		{
 			{ 2.0f / (R - L),   0.0f,           0.0f,       0.0f },
-		{ 0.0f,         2.0f / (T - B),     0.0f,       0.0f },
-		{ 0.0f,         0.0f,           0.5f,       0.0f },
-		{ (R + L) / (L - R),  (T + B) / (B - T),    0.5f,       1.0f },
+			{ 0.0f,         2.0f / (T - B),     0.0f,       0.0f },
+			{ 0.0f,         0.0f,           0.5f,       0.0f },
+			{ (R + L) / (L - R),  (T + B) / (B - T),    0.5f,       1.0f },
 		};
 		memcpy(&constant_buffer->mvp, mvp, sizeof(mvp));
 	}
@@ -443,7 +464,9 @@ void* MTDX12GUI::CreateFontsTexture(const MTGUIFontTextureDesc& FontTextureDesc)
 		hr = uploadBuffer->Map(0, &range, &mapped);
 		IM_ASSERT(SUCCEEDED(hr));
 		for (int y = 0; y < FontTextureDesc.Height; y++)
+		{
 			memcpy((void*)((uintptr_t)mapped + y * uploadPitch), FontTextureDesc.Pixels + y * FontTextureDesc.Width * 4, FontTextureDesc.Width * 4);
+		}
 		uploadBuffer->Unmap(0, &range);
 
 		D3D12_TEXTURE_COPY_LOCATION srcLocation = {};

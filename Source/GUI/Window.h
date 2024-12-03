@@ -8,10 +8,10 @@ class MTRDIWindowView;
 class MTWindow
 {
 public:
-    MTWindow();
-    virtual ~MTWindow();
+	MTWindow();
+	virtual ~MTWindow();
 
-    void GetWindowSize(MTUInt32& outWidth, MTUInt32& outHeight);
+	void GetWindowSize(MTUInt32& outWidth, MTUInt32& outHeight);
 
 	void GetDisplaySize(MTUInt32& outWidth, MTUInt32& outHeight);
 
@@ -24,6 +24,6 @@ public:
 	void Resize(MTInt32 Width, MTInt32 Height);
 
 private:
-    SDL_Window* m_Window = nullptr;
+	SDL_Window* m_Window = nullptr;
 	MTRDIWindowView* m_RenderView = nullptr;
 };

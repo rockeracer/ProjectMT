@@ -8,11 +8,11 @@ class MTRenderSample
 public:
 	~MTRenderSample();
 
-    void Init(IRDI* RDI);
+	void Init(IRDI* RDI);
 	void Destroy();
 
 	void Render(MTRDIWindowView* View);
-    
+
 private:
 	IRDI* m_RDI = nullptr;
 
@@ -21,11 +21,11 @@ private:
 	IRDICommandBuffer* m_CommandBuffer = nullptr;
 
 	struct ShaderConstants
-    {
-        //matrix_float4x4
-        MTMatrix4x4 modelViewProjectionMatrix;
-        //matrix_float3x3
+	{
+		//matrix_float4x4
+		MTMatrix4x4 modelViewProjectionMatrix;
+		//matrix_float3x3
 		MTMatrix4x4 normalMatrix;
-    };
-    ShaderConstants m_Constants;
+	};
+	ShaderConstants m_Constants;
 };

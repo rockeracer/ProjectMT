@@ -7,7 +7,7 @@ MTClass::MTClass()
 
 MTClass::~MTClass()
 {
-	for (auto Itr : m_Properties)
+	for (MTMap<MTName, MTProperty*>::Iterator Itr : m_Properties)
 	{
 		MTProperty* Property = Itr.second;
 		delete Property;

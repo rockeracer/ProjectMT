@@ -13,7 +13,7 @@ public:
 	{
 		m_Map.clear();
 	}
-	
+
 	ValueType* Get(const KeyType& Key)
 	{
 		Iterator itr = m_Map.find(Key);
@@ -28,21 +28,22 @@ public:
 	}
 
 	const ValueType* Get(const KeyType& Key) const
-    {
+	{
 		Const_Iterator itr = m_Map.find(Key);
-        if (itr != m_Map.end())
-        {
-            return &itr->second;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
+		if (itr != m_Map.end())
+		{
+			return &itr->second;
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
 
 	bool Add(const KeyType& Key, ValueType& Value)
 	{
-		return m_Map.insert(std::pair<KeyType, ValueType>(Key, Value)).second;	}
+		return m_Map.insert(std::pair<KeyType, ValueType>(Key, Value)).second;
+	}
 
 	bool Add(const KeyType& Key, const ValueType& Value)
 	{

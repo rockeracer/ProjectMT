@@ -6,7 +6,7 @@ typedef void* MTModuleFuncHandle;
 class IPlatformAPI
 {
 public:
-    virtual ~IPlatformAPI()	{}
+    virtual ~IPlatformAPI() {}
     
     virtual MTModuleHandle LoadModule(const char* FilePath) = 0;
     virtual void DestroyModule(MTModuleHandle Module) = 0;

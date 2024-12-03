@@ -39,7 +39,7 @@ MTRDIWindowView* MTDX12RDI::CreateWindowView(void* Handle, MTUInt32 Width, MTUIn
 	MTDX12WindowView* WindowView = new MTDX12WindowView(Width, Height);
 	WindowView->Init(m_DX12Device.Get(), m_GIFactory.Get(), m_CommandQueue.Get(), (HWND)Handle, Width, Height, BackbufferCount);
 
-    return WindowView;
+	return WindowView;
 }
 
 void MTDX12RDI::CreateDevice()
@@ -300,7 +300,7 @@ MTRDIBuffer* MTDX12RDI::CreateIndexBuffer(const void* Data, MTInt32 BufferSize, 
 
 MTRDIDepthStencilState* MTDX12RDI::CreateDepthStencilState(MTCompareFunction CompareFunction, bool bDepthWrite)
 {
-    return nullptr;
+	return nullptr;
 }
 
 MTRDITexture* MTDX12RDI::CreateTextureFromFilePath(const MTString& FilePath)
@@ -308,7 +308,7 @@ MTRDITexture* MTDX12RDI::CreateTextureFromFilePath(const MTString& FilePath)
 	MTDX12Texture* Texture = new MTDX12Texture;
 	Texture->FilePath = FilePath;
 	m_ResourceUploader.ReserveUpload(Texture);
-    return Texture;
+	return Texture;
 }
 
 MTRDITexture* MTDX12RDI::CreateTextureFromMemory(MTUInt32 Width, MTUInt32 Height, MTUChar* Pixels, MTUInt32 Size)

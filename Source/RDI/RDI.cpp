@@ -3,7 +3,7 @@
 
 extern "C" RDI_API IModule* CreateModule()
 {
-    return new MTRDIModule;
+	return new MTRDIModule;
 }
 
 IRDI* RDI::GetRDI()

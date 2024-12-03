@@ -75,17 +75,14 @@ public:
 
 		DeallocateBuffer();
 
-		// #TODO : Must release from SmartPointer
+		for (MTMaterial* Material : m_Materials)
 		{
-			for (MTMaterial* Material : m_Materials)
-			{
-				delete Material;
-			}
+			delete Material;
+		}
 
-			for (MTTexture* Texture : m_Textures)
-			{
-				delete Texture;
-			}
+		for (MTTexture* Texture : m_Textures)
+		{
+			delete Texture;
 		}
 	}
 
