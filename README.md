@@ -24,7 +24,7 @@
     - 언리얼 엔진과 같은 매테리얼 그래프를 통해 쉐이더 코드 생성.
     - ./Source/Shader
     - ./Shader
-  - Rendering Thread 적용
+  - Rendering Thread 구현
     - ./Source/RenderCore
 
 * GUI
